@@ -27,6 +27,8 @@ import Badge from "@99mini/atom/Badge";
 - [Button](#Button)
 - [CheckBox](#CheckBox)
 - [Skeleton](#Skeleton)
+- [Progress](#Progress)
+  - [LinearProgress](#LinearProgress)
 
 ## Button
 
@@ -57,6 +59,10 @@ const App = () => {
 ## CheckBox
 
 ## Skeleton
+
+## Progress
+
+### LinearProgress
 
 # Dependency
 
