@@ -18,10 +18,10 @@ export type GridProps = React.DetailedHTMLProps<
 
 type GridPropsType = {
   /**
-   * If true, the grid will be `regular`, otherwise it will be `irregular`.
+   * If true, the grid will be `irregular`, otherwise it will be `regular`.
    * `Irrgular` grid is `masnory` layout.
    */
-  regular?: boolean;
+  irregular?: boolean;
   /**
    * count of column
    */
@@ -38,13 +38,19 @@ type GridPropsType = {
    * force `columnGap` and `rowGap` to be the same value
    */
   gap?: number;
+  /**
+   * If `irregualr` is false, this props will be ignored.
+   * Otherwise If `irregular` is true and `notGuaranteeOrder` is true, the order of the children will be not maintained.
+   */
+  notGuaranteeOrder?: boolean;
 };
 
 export const Grid = ({
-  regular = true,
+  irregular = false,
   column = 4,
   columnGap = 8,
   rowGap = 8,
+  notGuaranteeOrder = false,
   ...props
 }: GridProps) => {
   const { gap, className, style, children, ...divProps } = props;
@@ -58,7 +64,7 @@ export const Grid = ({
   const rootRef = useRef<HTMLDivElement>(null);
 
   const rootContext: GirdContextType = {
-    regular,
+    irregular,
     gridItemMetaData,
     setGridItemMetaData,
     width,
@@ -66,17 +72,12 @@ export const Grid = ({
     column,
     rowGap: gap ?? rowGap,
     columnGap: gap ?? columnGap,
+    notGuaranteeOrder,
   };
 
   useEffect(() => {
-    if (!rootRef || !rootRef.current) {
-      return;
-    }
-
-    const element = rootRef.current;
-
-    setWidth(element.offsetWidth);
-  }, [rootRef, rootRef.current]);
+    setWidth(rootRef?.current?.offsetWidth ?? 0);
+  }, []);
 
   return (
     <GridContext.Provider value={rootContext}>
@@ -84,11 +85,10 @@ export const Grid = ({
         <div
           {...divProps}
           style={{
-            ...style,
+            width,
+            height,
             ...{
-              width,
-              height,
-              ...(regular
+              ...(!irregular
                 ? {
                     height: "auto",
                     rowGap,
@@ -97,11 +97,12 @@ export const Grid = ({
                   }
                 : {}),
             },
+            ...style,
           }}
           className={classNames("YnI-Grid", className)}
-          data-regular={regular}
+          data-regular={!irregular}
         >
-          {children ?? "Grid"}
+          {children}
         </div>
       </div>
     </GridContext.Provider>

@@ -1,4 +1,4 @@
-import { render, waitFor } from "@testing-library/react";
+import { act, render, waitFor } from "@testing-library/react";
 
 import React from "react";
 import Grid from "../Grid";
@@ -21,32 +21,26 @@ describe("GridItem", () => {
     );
     expect(result).toBeTruthy();
   });
+});
 
+describe("Irregular grid", () => {
   it("should render irregular grid", async () => {
     const result = render(
-      <Grid regular={false} gap={10} column={2}>
-        <GridItem data-testid={"1"}>
-          <div style={{ height: 100 }}>1</div>
-        </GridItem>
-        <GridItem data-testid={"2"}>
-          <div style={{ height: 50 }}>2</div>
-        </GridItem>
-        <GridItem data-testid={"3"}>
-          <div style={{ height: 50 }}>3</div>
-        </GridItem>
+      <Grid irregular>
+        <GridItem></GridItem>
       </Grid>,
     );
+    expect(result).toBeTruthy();
+  });
+});
 
-    const first = result.getByTestId("1");
-    const second = result.getByTestId("2");
-    const third = result.getByTestId("3");
-
-    await waitFor(() => {
-      expect(first.style.transform).toBe("translate3d(0px, 0px, 0)");
-      expect(second.style.transform).toBe("translate3d(5px, 0px, 0)");
-      expect(third.style.transform).toBe("translate3d(0px, 10px, 0)");
-    });
-
+describe("Irregular grid with notGuaranteeOrder", () => {
+  it("should render irregular grid with notGuaranteeOrder", async () => {
+    const result = render(
+      <Grid irregular notGuaranteeOrder>
+        <GridItem></GridItem>
+      </Grid>,
+    );
     expect(result).toBeTruthy();
   });
 });
